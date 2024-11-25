@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Service
 {
@@ -50,7 +51,7 @@ namespace Service
         {
             FillComponents(details);
 
-            return new Warehouse(_details);
+            return new Warehouse(_details.ToList());
         }
 
         private void FillComponents(List<Detail> details)
@@ -227,7 +228,7 @@ namespace Service
                 switch (Console.ReadLine())
                 {
                     case CommandContinue:
-                        ChangeDetail(brokenDetails.Dequeue(), car, repairedDetails, unrepairedDetail);
+                        GetRepairResult(brokenDetails.Dequeue(), car, repairedDetails, unrepairedDetail);
                         break;
 
                     case CommandStopRepair:
@@ -246,7 +247,7 @@ namespace Service
             CalculateResult(brokenDetails, repairedDetails, unrepairedDetail);
         }
 
-        private void ChangeDetail(Detail brokenComponent, Car car,
+        private void GetRepairResult(Detail brokenComponent, Car car,
             List<Detail> repairedComponents, List<Detail> unRepaireComponent)
         {
             if (_warehouse.TryGetDetail(brokenComponent.Name, out Detail component))
@@ -363,8 +364,7 @@ namespace Service
 
         public void ChangeDetail(Detail detail, Detail brokenDetail)
         {
-            _details.Remove(brokenDetail);
-            _details.Add(detail);
+            brokenDetail = detail;
         }
 
         public Queue<Detail> GetBrokenDetail()
